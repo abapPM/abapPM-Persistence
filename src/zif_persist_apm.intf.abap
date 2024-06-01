@@ -17,6 +17,8 @@ INTERFACE zif_persist_apm PUBLIC.
     END OF ty_zabappm,
     ty_list TYPE SORTED TABLE OF ty_zabappm WITH UNIQUE KEY key.
 
+  CONSTANTS c_version TYPE string VALUE '1.0.0' ##NEEDED.
+
   CONSTANTS:
     c_zapm        TYPE tadir-object VALUE 'ZAPM',
     c_devclass    TYPE c LENGTH 30 VALUE '$TMP',
