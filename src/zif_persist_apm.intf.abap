@@ -6,11 +6,18 @@ INTERFACE zif_persist_apm PUBLIC.
 * Copyright 2024 apm.to Inc. <https://apm.to>
 * SPDX-License-Identifier: MIT
 ************************************************************************
+
+  CONSTANTS c_version TYPE string VALUE '1.0.0' ##NEEDED.
+
+  " Maximum key length to allow transporting entries
+  CONSTANTS c_max_key_len TYPE i VALUE 120.
+
   TYPES:
-    ty_key TYPE c LENGTH 120,
+    ty_key   TYPE c LENGTH c_max_key_len,
+    ty_value TYPE string,
     BEGIN OF ty_zabappm,
       keys      TYPE ty_key,
-      value     TYPE string,
+      value     TYPE ty_value,
       luser     TYPE as4user,
       timestamp TYPE timestampl,
     END OF ty_zabappm,
@@ -19,7 +26,7 @@ INTERFACE zif_persist_apm PUBLIC.
       key_type  TYPE string,
       key_name  TYPE string,
       key_extra TYPE string,
-      value     TYPE string,
+      value     TYPE ty_value,
       user      TYPE as4user,
       timestamp TYPE timestampl,
     END OF ty_list_item,
@@ -32,8 +39,6 @@ INTERFACE zif_persist_apm PUBLIC.
       extra        TYPE string,
       content_type TYPE string,
     END OF ty_explained.
-
-  CONSTANTS c_version TYPE string VALUE '1.0.0' ##NEEDED.
 
   CONSTANTS:
     c_zapm        TYPE tadir-object VALUE 'ZAPM',
@@ -66,16 +71,16 @@ INTERFACE zif_persist_apm PUBLIC.
 
   METHODS list
     IMPORTING
-      !iv_filter    TYPE ty_key OPTIONAL
-      !iv_from      TYPE timestampl DEFAULT 0
-      !iv_to        TYPE timestampl DEFAULT 99991231000000
-        PREFERRED PARAMETER iv_filter
+      !filter       TYPE ty_key OPTIONAL
+      !from         TYPE timestampl DEFAULT 0
+      !to           TYPE timestampl DEFAULT 99991231000000
+        PREFERRED PARAMETER filter
     RETURNING
       VALUE(result) TYPE ty_list.
 
   METHODS load
     IMPORTING
-      !iv_key       TYPE ty_key
+      !key          TYPE ty_key
     RETURNING
       VALUE(result) TYPE ty_zabappm
     RAISING
@@ -83,21 +88,21 @@ INTERFACE zif_persist_apm PUBLIC.
 
   METHODS save
     IMPORTING
-      !iv_key   TYPE ty_key
-      !iv_value TYPE ty_zabappm-value
+      !key   TYPE ty_key
+      !value TYPE ty_value
     RAISING
       zcx_error.
 
   METHODS delete
     IMPORTING
-      !iv_key TYPE ty_key
+      !key TYPE ty_key
     RAISING
       zcx_error.
 
   METHODS lock
     IMPORTING
-      !iv_key  TYPE ty_key
-      !iv_mode TYPE enqmode DEFAULT 'E'
+      !key  TYPE ty_key
+      !mode TYPE enqmode DEFAULT 'E'
     RAISING
       zcx_error.
 
