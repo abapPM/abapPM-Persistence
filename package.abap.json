@@ -1,7 +1,7 @@
 {
   "name": "@apm/persistence",
   "version": "1.0.0",
-  "description": "apm - Key value store",
+  "description": "Key Value Store for apm",
   "keywords": [
     "abap",
     "apm",
