@@ -70,7 +70,9 @@
     "contains_tab": true,
     "cyclic_oo": true,
     "cyclomatic_complexity": true,
-    "dangerous_statement": true,
+    "dangerous_statement": {
+      "dynamicSQL": false
+    },
     "db_operation_in_loop": true,
     "definitions_top": true,
     "description_empty": true,
@@ -151,7 +153,7 @@
     "method_overwrites_builtin": true,
     "method_parameter_names": false,
     "mix_returning": true,
-    "modify_only_own_db_tables": true,
+    "modify_only_own_db_tables": false,
     "msag_consistency": true,
     "names_no_dash": true,
     "nesting": true,
