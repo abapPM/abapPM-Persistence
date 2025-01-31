@@ -2,7 +2,6 @@
   <picture>
     <img width="100" height="40" alt="apm logo banner" src="https://github.com/abapPM/abapPM/blob/main/img/apm_banner.png?raw=true&ver=1.0.0">
   </picture>
-  <p>&nbsp;</p>
 </div>
 
 ![Version](https://img.shields.io/endpoint?url=https://shield.abappm.com/github/abapPM/abapPM-Persistence/src/zif_persist_apm.intf.abap/c_version&label=Version&color=blue)
