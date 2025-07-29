@@ -1,4 +1,4 @@
-INTERFACE zif_persist_apm PUBLIC.
+INTERFACE /apmg/if_persist_apm PUBLIC.
 
 ************************************************************************
 * apm Persistence
@@ -86,26 +86,26 @@ INTERFACE zif_persist_apm PUBLIC.
     RETURNING
       VALUE(result) TYPE ty_zabappm
     RAISING
-      zcx_error.
+      /apmg/cx_error.
 
   METHODS save
     IMPORTING
       !key   TYPE ty_key
       !value TYPE ty_value
     RAISING
-      zcx_error.
+      /apmg/cx_error.
 
   METHODS delete
     IMPORTING
       !key TYPE ty_key
     RAISING
-      zcx_error.
+      /apmg/cx_error.
 
   METHODS lock
     IMPORTING
       !key  TYPE ty_key
       !mode TYPE enqmode DEFAULT 'E'
     RAISING
-      zcx_error.
+      /apmg/cx_error.
 
 ENDINTERFACE.
