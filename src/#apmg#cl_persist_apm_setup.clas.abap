@@ -1,4 +1,4 @@
-CLASS zcl_persist_apm_setup DEFINITION
+CLASS /apmg/cl_persist_apm_setup DEFINITION
   PUBLIC
   FINAL
   CREATE PUBLIC.
@@ -13,22 +13,22 @@ CLASS zcl_persist_apm_setup DEFINITION
 
     CLASS-METHODS install
       RAISING
-        zcx_error.
+        /apmg/cx_error.
 
     CLASS-METHODS uninstall
       RAISING
-        zcx_error.
+        /apmg/cx_error.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
 
     CLASS-METHODS logo_create
       RAISING
-        zcx_error.
+        /apmg/cx_error.
 
     CLASS-METHODS logo_delete
       RAISING
-        zcx_error.
+        /apmg/cx_error.
 
     CLASS-METHODS logo_exists
       RETURNING
@@ -36,11 +36,11 @@ CLASS zcl_persist_apm_setup DEFINITION
 
     CLASS-METHODS table_create
       RAISING
-        zcx_error.
+        /apmg/cx_error.
 
     CLASS-METHODS table_delete
       RAISING
-        zcx_error.
+        /apmg/cx_error.
 
     CLASS-METHODS table_exists
       RETURNING
@@ -48,11 +48,11 @@ CLASS zcl_persist_apm_setup DEFINITION
 
     CLASS-METHODS lock_create
       RAISING
-        zcx_error.
+        /apmg/cx_error.
 
     CLASS-METHODS lock_delete
       RAISING
-        zcx_error.
+        /apmg/cx_error.
 
     CLASS-METHODS lock_exists
       RETURNING
@@ -65,13 +65,13 @@ CLASS zcl_persist_apm_setup DEFINITION
         !no_ask               TYPE abap_bool DEFAULT abap_true
         !no_ask_delete_append TYPE abap_bool DEFAULT abap_false
       RAISING
-        zcx_error.
+        /apmg/cx_error.
 
 ENDCLASS.
 
 
 
-CLASS zcl_persist_apm_setup IMPLEMENTATION.
+CLASS /apmg/cl_persist_apm_setup IMPLEMENTATION.
 
 
   METHOD delete_ddic.
@@ -124,11 +124,11 @@ CLASS zcl_persist_apm_setup IMPLEMENTATION.
     ENDTRY.
 
     IF sy-subrc = 5.
-      RAISE EXCEPTION TYPE zcx_error_text
+      RAISE EXCEPTION TYPE /apmg/cx_error_text
         EXPORTING
           text = |{ objtype } { objname } has dependencies and must be deleted manually|.
     ELSEIF sy-subrc <> 0.
-      RAISE EXCEPTION TYPE zcx_error_text
+      RAISE EXCEPTION TYPE /apmg/cx_error_text
         EXPORTING
           text = |Error deleting { objtype } { objname }|.
     ENDIF.
@@ -160,30 +160,30 @@ CLASS zcl_persist_apm_setup IMPLEMENTATION.
       dd27p TYPE STANDARD TABLE OF dd27p WITH KEY viewname objpos ddlanguage viewfield tabname fieldname.
 
     DATA(dd25v) = VALUE dd25v(
-      viewname   = zif_persist_apm=>c_lock
+      viewname   = /apmg/if_persist_apm=>c_lock
       aggtype    = 'E'
-      roottab    = zif_persist_apm=>c_tabname
-      ddlanguage = zif_persist_apm=>c_english
+      roottab    = /apmg/if_persist_apm=>c_tabname
+      ddlanguage = /apmg/if_persist_apm=>c_english
       ddtext     = 'apm - Persistence' ).
 
     APPEND INITIAL LINE TO dd26e ASSIGNING FIELD-SYMBOL(<dd26e>).
-    <dd26e>-viewname   = zif_persist_apm=>c_lock.
-    <dd26e>-tabname    = zif_persist_apm=>c_tabname.
+    <dd26e>-viewname   = /apmg/if_persist_apm=>c_lock.
+    <dd26e>-tabname    = /apmg/if_persist_apm=>c_tabname.
     <dd26e>-tabpos     = '0001'.
-    <dd26e>-fortabname = zif_persist_apm=>c_tabname.
+    <dd26e>-fortabname = /apmg/if_persist_apm=>c_tabname.
     <dd26e>-enqmode    = 'E'.
 
     APPEND INITIAL LINE TO dd27p ASSIGNING FIELD-SYMBOL(<dd27p>).
-    <dd27p>-viewname  = zif_persist_apm=>c_lock.
+    <dd27p>-viewname  = /apmg/if_persist_apm=>c_lock.
     <dd27p>-objpos    = '0001'.
     <dd27p>-viewfield = 'KEYS'.
-    <dd27p>-tabname   = zif_persist_apm=>c_tabname.
+    <dd27p>-tabname   = /apmg/if_persist_apm=>c_tabname.
     <dd27p>-fieldname = 'KEYS'.
     <dd27p>-keyflag   = abap_true.
 
     CALL FUNCTION 'DDIF_ENQU_PUT'
       EXPORTING
-        name              = zif_persist_apm=>c_lock
+        name              = /apmg/if_persist_apm=>c_lock
         dd25v_wa          = dd25v
       TABLES
         dd26e_tab         = dd26e
@@ -196,10 +196,10 @@ CLASS zcl_persist_apm_setup IMPLEMENTATION.
         put_refused       = 5
         OTHERS            = 6.
     IF sy-subrc <> 0.
-      RAISE EXCEPTION TYPE zcx_error_t100.
+      RAISE EXCEPTION TYPE /apmg/cx_error_t100.
     ENDIF.
 
-    DATA(obj_name) = CONV sobj_name( zif_persist_apm=>c_lock ).
+    DATA(obj_name) = CONV sobj_name( /apmg/if_persist_apm=>c_lock ).
 
     CALL FUNCTION 'TR_TADIR_INTERFACE'
       EXPORTING
@@ -208,24 +208,24 @@ CLASS zcl_persist_apm_setup IMPLEMENTATION.
         wi_tadir_obj_name = obj_name
         wi_set_genflag    = abap_true
         wi_test_modus     = abap_false
-        wi_tadir_devclass = zif_persist_apm=>c_devclass
+        wi_tadir_devclass = /apmg/if_persist_apm=>c_devclass
       EXCEPTIONS
         OTHERS            = 1.
     IF sy-subrc <> 0.
-      RAISE EXCEPTION TYPE zcx_error_t100.
+      RAISE EXCEPTION TYPE /apmg/cx_error_t100.
     ENDIF.
 
     CALL FUNCTION 'DDIF_ENQU_ACTIVATE'
       EXPORTING
-        name        = zif_persist_apm=>c_lock
+        name        = /apmg/if_persist_apm=>c_lock
       EXCEPTIONS
         not_found   = 1
         put_failure = 2
         OTHERS      = 3.
     IF sy-subrc <> 0.
-      RAISE EXCEPTION TYPE zcx_error_text
+      RAISE EXCEPTION TYPE /apmg/cx_error_text
         EXPORTING
-          text = |Error activating { zif_persist_apm=>c_lock }|.
+          text = |Error activating { /apmg/if_persist_apm=>c_lock }|.
     ENDIF.
 
   ENDMETHOD.
@@ -235,7 +235,7 @@ CLASS zcl_persist_apm_setup IMPLEMENTATION.
 
     delete_ddic(
       objtype = 'L'
-      objname = zif_persist_apm=>c_lock ).
+      objname = /apmg/if_persist_apm=>c_lock ).
 
   ENDMETHOD.
 
@@ -243,7 +243,7 @@ CLASS zcl_persist_apm_setup IMPLEMENTATION.
   METHOD lock_exists.
 
     SELECT COUNT(*) FROM dd25l INTO @DATA(count)
-      WHERE viewname = @zif_persist_apm=>c_lock.
+      WHERE viewname = @/apmg/if_persist_apm=>c_lock.
     result = xsdbool( count > 0 ).
 
   ENDMETHOD.
@@ -252,7 +252,7 @@ CLASS zcl_persist_apm_setup IMPLEMENTATION.
   METHOD logo_create.
 
     DATA(objh) = VALUE objh(
-      objectname = zif_persist_apm=>c_zapm
+      objectname = /apmg/if_persist_apm=>c_zapm
       objecttype = 'L'
       objcateg   = 'APPL'
       checkid    = 'L'
@@ -263,25 +263,25 @@ CLASS zcl_persist_apm_setup IMPLEMENTATION.
       objcharset = '1' ).
 
     DATA(objt) = VALUE objt(
-      language   = zif_persist_apm=>c_english
-      objectname = zif_persist_apm=>c_zapm
+      language   = /apmg/if_persist_apm=>c_english
+      objectname = /apmg/if_persist_apm=>c_zapm
       objecttype = 'L'
       ddtext     = 'apm' ).
 
     DATA(objs) = VALUE objs(
-      objectname = zif_persist_apm=>c_zapm
+      objectname = /apmg/if_persist_apm=>c_zapm
       objecttype = 'L'
-      tabname    = zif_persist_apm=>c_tabname
+      tabname    = /apmg/if_persist_apm=>c_tabname
       ddic       = abap_true
       prim_table = abap_true ).
 
     DATA(objsl) = VALUE objsl(
-      objectname = zif_persist_apm=>c_zapm
+      objectname = /apmg/if_persist_apm=>c_zapm
       objecttype = 'L'
       trwcount   = '01'
       tpgmid     = 'R3TR'
       tobject    = 'TABU'
-      tobj_name  = zif_persist_apm=>c_tabname
+      tobj_name  = /apmg/if_persist_apm=>c_tabname
       tobjkey    = '/&/*'
       masknlen   = 7
       maskklen   = 2
@@ -297,10 +297,10 @@ CLASS zcl_persist_apm_setup IMPLEMENTATION.
 
   METHOD logo_delete.
 
-    DELETE FROM objh WHERE objectname = @zif_persist_apm=>c_zapm AND objecttype = 'L' ##SUBRC_OK.
-    DELETE FROM objt WHERE objectname = @zif_persist_apm=>c_zapm AND objecttype = 'L' ##SUBRC_OK.
-    DELETE FROM objs WHERE objectname = @zif_persist_apm=>c_zapm AND objecttype = 'L' ##SUBRC_OK.
-    DELETE FROM objsl WHERE objectname = @zif_persist_apm=>c_zapm AND objecttype = 'L' ##SUBRC_OK.
+    DELETE FROM objh WHERE objectname = @/apmg/if_persist_apm=>c_zapm AND objecttype = 'L' ##SUBRC_OK.
+    DELETE FROM objt WHERE objectname = @/apmg/if_persist_apm=>c_zapm AND objecttype = 'L' ##SUBRC_OK.
+    DELETE FROM objs WHERE objectname = @/apmg/if_persist_apm=>c_zapm AND objecttype = 'L' ##SUBRC_OK.
+    DELETE FROM objsl WHERE objectname = @/apmg/if_persist_apm=>c_zapm AND objecttype = 'L' ##SUBRC_OK.
 
   ENDMETHOD.
 
@@ -308,7 +308,7 @@ CLASS zcl_persist_apm_setup IMPLEMENTATION.
   METHOD logo_exists.
 
     SELECT COUNT(*) FROM objh INTO @DATA(count)
-      WHERE objectname = @zif_persist_apm=>c_zapm AND objecttype = 'L'.
+      WHERE objectname = @/apmg/if_persist_apm=>c_zapm AND objecttype = 'L'.
     result = xsdbool( count > 0 ).
 
   ENDMETHOD.
@@ -321,15 +321,15 @@ CLASS zcl_persist_apm_setup IMPLEMENTATION.
       dd03p TYPE STANDARD TABLE OF dd03p WITH KEY tabname fieldname position.
 
     DATA(dd02v) = VALUE dd02v(
-      tabname    = zif_persist_apm=>c_tabname
-      ddlanguage = zif_persist_apm=>c_english
+      tabname    = /apmg/if_persist_apm=>c_tabname
+      ddlanguage = /apmg/if_persist_apm=>c_english
       tabclass   = 'TRANSP'
       ddtext     = 'apm - Persistence'
       contflag   = 'A'
       exclass    = '1' ).
 
     DATA(dd09l) = VALUE dd09l(
-      tabname   = zif_persist_apm=>c_tabname
+      tabname   = /apmg/if_persist_apm=>c_tabname
       as4local  = 'A'
       tabkat    = '1'
       tabart    = 'APPL0'
@@ -337,48 +337,48 @@ CLASS zcl_persist_apm_setup IMPLEMENTATION.
       pufferung = 'P' ).
 
     APPEND INITIAL LINE TO dd03p ASSIGNING FIELD-SYMBOL(<dd03p>).
-    <dd03p>-tabname    = zif_persist_apm=>c_tabname.
+    <dd03p>-tabname    = /apmg/if_persist_apm=>c_tabname.
     <dd03p>-fieldname  = 'KEYS'. "KEY is not allowed
     <dd03p>-position   = '0001'.
     <dd03p>-keyflag    = 'X'.
     <dd03p>-notnull    = 'X'.
     <dd03p>-datatype   = 'CHAR'.
     <dd03p>-leng       = '000120'.
-    <dd03p>-ddlanguage = zif_persist_apm=>c_english.
+    <dd03p>-ddlanguage = /apmg/if_persist_apm=>c_english.
     <dd03p>-ddtext     = 'Key'.
 
     APPEND INITIAL LINE TO dd03p ASSIGNING <dd03p>.
-    <dd03p>-tabname    = zif_persist_apm=>c_tabname.
+    <dd03p>-tabname    = /apmg/if_persist_apm=>c_tabname.
     <dd03p>-fieldname  = 'VALUE'.
     <dd03p>-position   = '0002'.
     <dd03p>-datatype   = 'STRG'.
-    <dd03p>-ddlanguage = zif_persist_apm=>c_english.
+    <dd03p>-ddlanguage = /apmg/if_persist_apm=>c_english.
     <dd03p>-ddtext     = 'Value'.
 
     APPEND INITIAL LINE TO dd03p ASSIGNING <dd03p>.
-    <dd03p>-tabname    = zif_persist_apm=>c_tabname.
+    <dd03p>-tabname    = /apmg/if_persist_apm=>c_tabname.
     <dd03p>-fieldname  = 'LUSER'.
     <dd03p>-position   = '0003'.
     <dd03p>-rollname   = 'AS4USER'.
     <dd03p>-datatype   = 'CHAR'.
     <dd03p>-leng       = '000012'.
-    <dd03p>-ddlanguage = zif_persist_apm=>c_english.
+    <dd03p>-ddlanguage = /apmg/if_persist_apm=>c_english.
     <dd03p>-ddtext     = 'Last Changed By'.
 
     APPEND INITIAL LINE TO dd03p ASSIGNING <dd03p>.
-    <dd03p>-tabname    = zif_persist_apm=>c_tabname.
+    <dd03p>-tabname    = /apmg/if_persist_apm=>c_tabname.
     <dd03p>-fieldname  = 'TIMESTAMP'.
     <dd03p>-position   = '0004'.
     <dd03p>-rollname   = 'TIMESTAMPL'.
     <dd03p>-datatype   = 'DEC'.
     <dd03p>-leng       = '000021'.
     <dd03p>-decimals   = '00007'.
-    <dd03p>-ddlanguage = zif_persist_apm=>c_english.
+    <dd03p>-ddlanguage = /apmg/if_persist_apm=>c_english.
     <dd03p>-ddtext     = 'Last Changed At'.
 
     CALL FUNCTION 'DDIF_TABL_PUT'
       EXPORTING
-        name              = zif_persist_apm=>c_tabname
+        name              = /apmg/if_persist_apm=>c_tabname
         dd02v_wa          = dd02v
         dd09l_wa          = dd09l
       TABLES
@@ -391,10 +391,10 @@ CLASS zcl_persist_apm_setup IMPLEMENTATION.
         put_refused       = 5
         OTHERS            = 6.
     IF sy-subrc <> 0.
-      RAISE EXCEPTION TYPE zcx_error_t100.
+      RAISE EXCEPTION TYPE /apmg/cx_error_t100.
     ENDIF.
 
-    DATA(obj_name) = CONV sobj_name( zif_persist_apm=>c_tabname ).
+    DATA(obj_name) = CONV sobj_name( /apmg/if_persist_apm=>c_tabname ).
 
     CALL FUNCTION 'TR_TADIR_INTERFACE'
       EXPORTING
@@ -403,16 +403,16 @@ CLASS zcl_persist_apm_setup IMPLEMENTATION.
         wi_tadir_obj_name = obj_name
         wi_set_genflag    = abap_true
         wi_test_modus     = abap_false
-        wi_tadir_devclass = zif_persist_apm=>c_devclass
+        wi_tadir_devclass = /apmg/if_persist_apm=>c_devclass
       EXCEPTIONS
         OTHERS            = 1.
     IF sy-subrc <> 0.
-      RAISE EXCEPTION TYPE zcx_error_t100.
+      RAISE EXCEPTION TYPE /apmg/cx_error_t100.
     ENDIF.
 
     CALL FUNCTION 'DDIF_TABL_ACTIVATE'
       EXPORTING
-        name        = zif_persist_apm=>c_tabname
+        name        = /apmg/if_persist_apm=>c_tabname
         auth_chk    = abap_false
       IMPORTING
         rc          = subrc
@@ -421,9 +421,9 @@ CLASS zcl_persist_apm_setup IMPLEMENTATION.
         put_failure = 2
         OTHERS      = 3.
     IF sy-subrc <> 0 OR subrc <> 0.
-      RAISE EXCEPTION TYPE zcx_error_text
+      RAISE EXCEPTION TYPE /apmg/cx_error_text
         EXPORTING
-          text = |Error activating { zif_persist_apm=>c_tabname }|.
+          text = |Error activating { /apmg/if_persist_apm=>c_tabname }|.
     ENDIF.
 
   ENDMETHOD.
@@ -443,11 +443,11 @@ CLASS zcl_persist_apm_setup IMPLEMENTATION.
 
     SELECT SINGLE tabname, tabclass, sqltab FROM dd02l
       INTO CORRESPONDING FIELDS OF @dd02l
-      WHERE tabname = @zif_persist_apm=>c_tabname AND as4local = 'A' AND as4vers = '0000'.
+      WHERE tabname = @/apmg/if_persist_apm=>c_tabname AND as4local = 'A' AND as4vers = '0000'.
     IF sy-subrc <> 0.
-      RAISE EXCEPTION TYPE zcx_error_text
+      RAISE EXCEPTION TYPE /apmg/cx_error_text
         EXPORTING
-          text = |Table { zif_persist_apm=>c_tabname } not found|.
+          text = |Table { /apmg/if_persist_apm=>c_tabname } not found|.
     ENDIF.
 
     CALL FUNCTION 'DD_EXISTS_DATA'
@@ -470,7 +470,7 @@ CLASS zcl_persist_apm_setup IMPLEMENTATION.
 
     delete_ddic(
       objtype = 'T'
-      objname = zif_persist_apm=>c_tabname
+      objname = /apmg/if_persist_apm=>c_tabname
       no_ask  = no_ask ).
 
   ENDMETHOD.
@@ -479,7 +479,7 @@ CLASS zcl_persist_apm_setup IMPLEMENTATION.
   METHOD table_exists.
 
     SELECT COUNT(*) FROM dd02l INTO @DATA(count)
-      WHERE tabname = @zif_persist_apm=>c_tabname.
+      WHERE tabname = @/apmg/if_persist_apm=>c_tabname.
     result = xsdbool( count > 0 ).
 
   ENDMETHOD.
