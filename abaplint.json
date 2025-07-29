@@ -37,6 +37,7 @@
         "CLAS",
         "DEVC",
         "INTF",
+        "NSPC",
         "PROG"
       ]
     },
@@ -182,7 +183,7 @@
       "aqqu": "^Z",
       "aqsg": "^Z",
       "auth": "^Z",
-      "clas": "^ZC(L|X)\\_PERSIST_APM",
+      "clas": "^/APMG/C(L|X)_PERSIST_APM",
       "cmod": "^Z",
       "doma": "^Z",
       "dtel": "^Z",
@@ -194,7 +195,7 @@
       "idoc": "^Z",
       "ignoreNames": [],
       "ignorePatterns": [],
-      "intf": "^ZIF\\_PERSIST_APM",
+      "intf": "^/APMG/IF_PERSIST_APM",
       "msag": "^Z",
       "patternKind": "required",
       "pinf": "^Z",
@@ -283,7 +284,7 @@
     "xml_consistency": true
   },
   "syntax": {
-    "errorNamespace": "^(Z|Y|LCL_|TY_|LIF_)",
+    "errorNamespace": "^(/APMG/|LCL_|TY_|LIF_)",
     "globalConstants": [],
     "globalMacros": [],
     "version": "v750"
