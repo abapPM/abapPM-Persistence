@@ -12,7 +12,7 @@
 
 # Persistence for apm
 
-Module used by apm to store in and retrieve package metadata from table `ZABAPPM`.
+Module used by apm to store and retrieve package metadata from table `ZABAPPM`.
 
 apm is a *package manager* 📦 for ABAP applications and modules, a *website* 🌐, and a *registry* 📑.
 
@@ -50,4 +50,4 @@ Made with ❤ in Canada
 
 Copyright 2025 apm.to Inc. <https://apm.to>
 
-Follow [@marcf.be](https://bsky.app/profile/marcf.be) on Blueksy and [@marcfbe](https://linkedin.com/in/marcfbe) or LinkedIn
+Follow [@marcf.be](https://bsky.app/profile/marcf.be) on Bluesky and [@marcfbe](https://linkedin.com/in/marcfbe) or LinkedIn
