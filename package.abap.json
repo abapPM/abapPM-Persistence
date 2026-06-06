@@ -2,6 +2,7 @@
   "name": "@apm/persistence",
   "version": "1.0.0",
   "description": "Key Value Store for apm",
+  "type": "module",
   "keywords": [
     "abap",
     "apm",
